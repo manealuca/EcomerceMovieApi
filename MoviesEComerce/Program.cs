@@ -10,6 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
 // Add services to the container.
 //var a  = configuration.GetSection("WebApiDatabase");
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddDbContext<MovieComerceContext>();
 builder.Services.AddScoped<IActorService,ActorService>();
 builder.Services.AddScoped<IBaseRepository<Actor>, EntityBaseRepository<Actor>>();

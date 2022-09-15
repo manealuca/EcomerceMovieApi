@@ -20,7 +20,7 @@ namespace MoviesEComerce.Data.Services
 
         public async Task DeleteAsync(int id)
         {
-            var result = await _context.Actor.FirstOrDefaultAsync(a => a.ActorId == id);
+            var result = await _context.Actor.FirstOrDefaultAsync(a => a.Id == id);
             _context.Actor.Remove(result);
             _context.SaveChanges();
         }
@@ -37,14 +37,14 @@ namespace MoviesEComerce.Data.Services
 
         public async Task<Actor> GetByIdAsync(int id)
         {
-            var result = await _context.Actor.FirstOrDefaultAsync(a => a.ActorId == id);
+            var result = await _context.Actor.FirstOrDefaultAsync(a => a.Id == id);
             if (result is null) return null;
             return result;
         }
 
         public async Task <Actor>UpdateAsync(int id, Actor oActor)
         {
-            oActor.ActorId = id;
+            oActor.Id = id;
             _context.Update(oActor);
             _context.SaveChanges();
             return oActor;

@@ -4,11 +4,11 @@ using System.Text.Json.Serialization;
 
 namespace MoviesEComerce.Models
 {
-    public class Actor
+    public class Actor: EntityBase
     {
-        [Key]
+        /*[Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int ActorId { get; set; }
+        public int ActorId { get; set; }*/
         [Display(Name = "Profile Picture")]
         [Required(ErrorMessage ="Profile Picture is Requiered")]
         public string ProfilePictureURL { get; set; }

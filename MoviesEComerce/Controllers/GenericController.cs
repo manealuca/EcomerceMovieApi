@@ -1,30 +1,27 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using MoviesEComerce.Data;
 using MoviesEComerce.Data.Services;
 using MoviesEComerce.Models;
 
-
 namespace MoviesEComerce.Controllers
 {
-    public class ActorController : GenericController<ActorEntity, Actor>
+    public  abstract class GenericController<Model,Entity> : Controller where Entity : class where Model: Models.EntityBase, new()
     {
 
-        private readonly IBaseRepository<Actor> _repository;
+        private readonly IBaseRepository<Entity> _repository;
+        private readonly IMapper _mapper;
 
-
-        public ActorController(IBaseRepository<Actor> repository, IMapper mapper) : base(repository, mapper)
+        protected GenericController(IBaseRepository<Entity> repository, IMapper mapper)
         {
             _repository = repository;
-
-        } 
-    }}
-        /*public  async Task<IActionResult> Index()
+            _mapper = mapper;
+        }
+        public async Task<IActionResult> Index()
         {
-            var Actores = await _repository.GetAllAsync();
-            return View(Actores);   
+            var Model = await _repository.GetAllAsync();
+            return View(Model);
         }
         public IActionResult Create()
         {
@@ -32,15 +29,30 @@ namespace MoviesEComerce.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([Bind(include:"ProfilePictureURL,FullName,Bio")] Actor actor)
+        public async Task<IActionResult> Create(Model model)
         {
             if (!ModelState.IsValid)
             {
-                return View(actor);
+                return View(model);
             }
-            var errors = ModelState.Where(x => x.Value.Errors.Count > 0).Select(x => new { x.Key, x.Value.Errors }).ToArray();
-             await _repository.AddAsync(actor);
-            return RedirectToAction(nameof(Index));
+            Entity entity;
+            try
+            {
+                entity = _mapper.Map<Entity>(model);
+                var errors = ModelState.Where(x => x.Value.Errors.Count > 0).Select(x => new { x.Key, x.Value.Errors }).ToArray();
+                await _repository.AddAsync(entity);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (DbUpdateException ex)
+                when(ex.InnerException is SqlException sqlEx &&(sqlEx.Number==2601 || sqlEx.Number==2627))
+            {
+                Console.WriteLine(ex.Message);
+                return BadRequest("Registro duplicado");
+            }catch(Exception e)
+            {
+                return Conflict(e.Message);
+            }
+
         }
         //Actor/Edit
         public async Task<IActionResult> Edit(int id)
@@ -50,11 +62,11 @@ namespace MoviesEComerce.Controllers
             return View(editActor);
         }
         [HttpPost]
-        public async Task<IActionResult> Edit(int id, Actor actor)
+        public async Task<IActionResult> Edit(int id, Entity model)
         {
-            if(!ModelState.IsValid) return View(actor);
+            if (!ModelState.IsValid) return View(model);
 
-            await _repository.UpdateAsync(id, actor);
+            await _repository.UpdateAsync(id, model);
             return RedirectToAction(nameof(Index));
 
         }
@@ -93,25 +105,25 @@ namespace MoviesEComerce.Controllers
             }
             return View(entity);
         }*/
-       /* public async Task<IActionResult> Detail(int id)
+        public async Task<IActionResult> Detail(int id)
         {
             var actorDetail = await _repository.GetByIdAsync(id);
-            if(actorDetail is null) return View("NotFound");
- 
+            if (actorDetail is null) return View("NotFound");
+
             return View(actorDetail);
         }
         //Actor/Delete
         public async Task<IActionResult> Delete(int id)
         {
-            var deleteActor = await _repository.GetByIdAsync(id);
-            if (deleteActor is null) return View("NotFound");
-            return View(deleteActor);
+            var deleteModel = await _repository.GetByIdAsync(id);
+            if (deleteModel is null) return View("NotFound");
+            return View(deleteModel);
         }
-        [HttpPost,ActionName("Delete")]
+        [HttpPost, ActionName("Delete")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var deleteActor = await _repository.GetByIdAsync(id);
-            if (deleteActor is null) return View("NotFound");
+            var deleteModel = await _repository.GetByIdAsync(id);
+            if (deleteModel is null) return View("NotFound");
 
             await _repository.DeleteAsync(id);
             return RedirectToAction(nameof(Index));
@@ -120,4 +132,5 @@ namespace MoviesEComerce.Controllers
 
 
     }
-}*/
+}
+
