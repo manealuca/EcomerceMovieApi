@@ -1,22 +1,21 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MoviesEComerce.Data;
+using MoviesEComerce.Data.Services;
+using MoviesEComerce.Models;
 
 namespace MoviesEComerce.Controllers
 {
-    public class CinemaController : Controller
+    public class CinemaController : GenericController<CinemaEntity, Cinema>
     {
-        private readonly MovieComerceContext _context;
+        private readonly IBaseRepository<Cinema> _repository;
 
-        public CinemaController(MovieComerceContext context)
-        {
-            _context = context;
-        }
-        public async Task<IActionResult> Index()
-        {
-            var Cinemas = _context.Cinema.ToListAsync();
 
-            return View(Cinemas);
+        public CinemaController(IBaseRepository<Cinema> repository, IMapper mapper) : base(repository, mapper)
+        {
+            _repository = repository;
+
         }
     }
 }

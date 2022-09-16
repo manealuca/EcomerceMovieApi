@@ -20,7 +20,8 @@ namespace MoviesEComerce.Controllers
             _repository = repository;
 
         } 
-    }}
+    }
+}
         /*public  async Task<IActionResult> Index()
         {
             var Actores = await _repository.GetAllAsync();

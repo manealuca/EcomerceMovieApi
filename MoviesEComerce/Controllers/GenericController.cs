@@ -33,14 +33,16 @@ namespace MoviesEComerce.Controllers
         {
             if (!ModelState.IsValid)
             {
+                var errors = ModelState.Where(x => x.Value.Errors.Count > 0).Select(x => new { x.Key, x.Value.Errors }).ToArray();
+
                 return View(model);
             }
             Entity entity;
             try
             {
-                entity = _mapper.Map<Entity>(model);
+                //entity = _mapper.Map<Entity>(model);
                 var errors = ModelState.Where(x => x.Value.Errors.Count > 0).Select(x => new { x.Key, x.Value.Errors }).ToArray();
-                await _repository.AddAsync(entity);
+                await _repository.AddAsync(_mapper.Map<Entity>(model));
                 return RedirectToAction(nameof(Index));
             }
             catch (DbUpdateException ex)

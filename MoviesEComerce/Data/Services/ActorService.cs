@@ -3,7 +3,7 @@ using MoviesEComerce.Models;
 
 namespace MoviesEComerce.Data.Services
 {
-    public class ActorService : IActorService
+    /*public class ActorService : IActorService
     {
         private  readonly MovieComerceContext _context;
         public ActorService(MovieComerceContext context)
@@ -49,5 +49,5 @@ namespace MoviesEComerce.Data.Services
             _context.SaveChanges();
             return oActor;
         }
-    }
+    }*/
 }

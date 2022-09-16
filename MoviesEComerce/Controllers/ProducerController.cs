@@ -1,22 +1,24 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MoviesEComerce.Data;
+using MoviesEComerce.Data.Services;
+using MoviesEComerce.Models;
 
 namespace MoviesEComerce.Controllers
 {
-    public class ProducerController : Controller
-    {
-        private readonly MovieComerceContext _context;
 
-        public ProducerController(MovieComerceContext context)
+        public class ProducerController : GenericController<ProducerEntity, Producer>
         {
-            _context = context;
-        }
-        public  async Task<IActionResult> Index()
-        {
-            var db = await _context.Producer.ToListAsync();
 
-            return View();
+            private readonly IBaseRepository<Producer> _repository;
+
+
+            public ProducerController(IBaseRepository<Producer> repository, IMapper mapper) : base(repository, mapper)
+            {
+                _repository = repository;
+
+            }
         }
-    }
+    
 }

@@ -8,6 +8,8 @@ namespace MoviesEComerce.AutoMapper
         public AutoMapperProfile()
         {
             CreateMap<ActorEntity, Actor>().ReverseMap();
+            CreateMap<ProducerEntity, Producer>().ReverseMap();
+            CreateMap<CinemaEntity, Cinema>().ReverseMap();
         }
     }
 }

@@ -51,9 +51,9 @@ namespace MoviesEComerce.Data.Services
         public async Task<IEnumerable<T>> GetAllAsync()
         {
 
-            var result = await _context.Set<T>().ToListAsync();
+            var result = await EntitySet.ToListAsync();
             if (result is null)
-                throw new NotImplementedException();
+                return Enumerable.Empty<T>();
             return result;
 
         }

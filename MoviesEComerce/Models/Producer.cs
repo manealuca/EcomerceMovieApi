@@ -3,23 +3,27 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MoviesEComerce.Models
 {
-    public class Producer
+    public class Producer:EntityBase
     {
-        [Key]
+        /*[Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ProducerId { get; set; }
+        */
 
-        [Required]
         [Display(Name = "FullName")]
+        [StringLength(50, ErrorMessage = "{0} length must be between {2} and {1}.", MinimumLength = 3)]
+        [Required(ErrorMessage = "Full Name is Required")]
         public string FullName { get; set; } = String.Empty;
-        [Required]
         [Display(Name = "Profile Picture")]
+        [Required(ErrorMessage = "Profile Picture is Requiered")]
         public string PictureURL { get; set; } = String.Empty;
         [Display(Name = "Biography")]
+        [StringLength(250, ErrorMessage = "{0} length must be between {2} and {1}.", MinimumLength = 3)]
+        [Required(ErrorMessage = "Biography is Required")]
         public string? Bio { get; set; } = String.Empty;
 
         //Relationships
 
-        public List<Movie> Movies { get; set; }
+        public List<Movie>? Movies { get; set; }
     }
 }
