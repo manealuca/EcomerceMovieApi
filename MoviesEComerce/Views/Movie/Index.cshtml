@@ -2,7 +2,7 @@
 
 
 @{
-    ViewData["Title"] = "List of Producers";
+    ViewData["Title"] = "List of Movies";
 }
 <div class="row">
     @foreach (var item in Model)
@@ -29,8 +29,9 @@
                         <div class="col-md-6">
                             <div class="card-body">
                                 <p class="card-text">@item.MovieDescription</p>
-                                <p class="card-text"><b>Cinema: </b>@item.cinema.FullName</p>
+                                
                                 <p class="card-text"><b>Category: </b>@item.MovieCategory</p>
+                                <p class="card-text"><b>Price: </b>@item.Price</p>
                                 <p class="card-text"><b>Start Date: </b>@item.StartDate.ToString("dd MMM yy")</p>
                                 <p class="card-text"><b>End Date: </b>@item.EndDate.ToString("dd MMM yy")</p>
                                 <p class="card-text ">
@@ -54,7 +55,7 @@
                         <div class="col-md-12">
                             <div class="card-footer ">
                                 <p class="card-text">
-                                    <a class="btn btn-outline-primary float-right" asp-action="Details" asp-route-id="@item.Id">
+                                    <a class="btn btn-outline-primary float-right"  asp-action="Detail" asp-route-id="@item.Id">
                                         <i class="bi bi-eye-fill"></i> Show Details
                                     </a>
                                     <a class="btn btn-success text-white @((DateTime.Now > item.EndDate) ? "disabled" : "")" 
@@ -70,5 +71,11 @@
             </div>
     }
 </div>
-
-@await Html.PartialAsync("_CreateItem", "Movies") 
+<div style="position:fixed right:25px bottom:25px" class="text-white">
+    <a asp-action="Create" class="btn btn-success">
+        <i class="bi bi-plus-circle">Add New</i>
+    </a>
+</div>
+@{
+    //@await Html.PartialAsync("_CreateItem", "Movies")
+} 

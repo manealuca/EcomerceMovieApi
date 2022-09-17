@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.SqlServer;
 using Microsoft.Extensions.Configuration;
+using MoviesEComerce.Controllers;
 using MoviesEComerce.Data;
 using MoviesEComerce.Data.Services;
 using MoviesEComerce.Models;
@@ -16,6 +17,8 @@ builder.Services.AddDbContext<MovieComerceContext>();
 builder.Services.AddScoped<IBaseRepository<Actor>, EntityBaseRepository<Actor>>();
 builder.Services.AddScoped<IBaseRepository<Producer>, EntityBaseRepository<Producer>>();
 builder.Services.AddScoped<IBaseRepository<Cinema>, EntityBaseRepository<Cinema>>();
+builder.Services.AddScoped<IBaseRepository<Movie>, EntityBaseRepository<Movie>>();
+
 //builder.Services.AddScoped<AppDbInitializer>();
 builder.Services.AddControllersWithViews();
 

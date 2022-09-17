@@ -33,17 +33,19 @@ namespace MoviesEComerce.Models
 
 
         //Relationships
- 
-        public int CinemaId { get; set; }
+        [Display(Name = "Cinema")]
+        public int? CinemaId { get; set; }
         [ForeignKey("CinemaId")]
-        public Cinema cinema { get; set; }
-        [JsonIgnore]
-        public List<MovieActor> MovieActors { get; set; }
-        public MovieCategory MovieCategory { get; set; }
+        public Cinema? cinema { get; set; }
 
-        public int ProducerId { get; set; }
+
+        public List<MovieActor>? MovieActors { get; set; }
+        public MovieCategory? MovieCategory { get; set; }
+
+        [Display(Name = "Producer")]
+        public int? ProducerId { get; set; }
         [ForeignKey("ProducerId")]
-        public Producer MovieProducer { get; set; }
+        public Producer? MovieProducer { get; set; }
 
 
     }

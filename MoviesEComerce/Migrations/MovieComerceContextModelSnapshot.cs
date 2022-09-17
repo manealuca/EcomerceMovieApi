@@ -84,13 +84,13 @@ namespace MoviesEComerce.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("CinemaId")
+                    b.Property<int?>("CinemaId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("MovieCategory")
+                    b.Property<int?>("MovieCategory")
                         .HasColumnType("int");
 
                     b.Property<string>("MovieDescription")
@@ -110,7 +110,7 @@ namespace MoviesEComerce.Migrations
                     b.Property<double>("Price")
                         .HasColumnType("float");
 
-                    b.Property<int>("ProducerId")
+                    b.Property<int?>("ProducerId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("StartDate")
@@ -170,16 +170,12 @@ namespace MoviesEComerce.Migrations
             modelBuilder.Entity("MoviesEComerce.Models.Movie", b =>
                 {
                     b.HasOne("MoviesEComerce.Models.Cinema", "cinema")
-                        .WithMany()
-                        .HasForeignKey("CinemaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany("Movies")
+                        .HasForeignKey("CinemaId");
 
                     b.HasOne("MoviesEComerce.Models.Producer", "MovieProducer")
                         .WithMany("Movies")
-                        .HasForeignKey("ProducerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ProducerId");
 
                     b.Navigation("MovieProducer");
 
@@ -208,6 +204,11 @@ namespace MoviesEComerce.Migrations
             modelBuilder.Entity("MoviesEComerce.Models.Actor", b =>
                 {
                     b.Navigation("MovieActor");
+                });
+
+            modelBuilder.Entity("MoviesEComerce.Models.Cinema", b =>
+                {
+                    b.Navigation("Movies");
                 });
 
             modelBuilder.Entity("MoviesEComerce.Models.Movie", b =>

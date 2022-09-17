@@ -4,7 +4,7 @@
 
 namespace MoviesEComerce.Migrations
 {
-    public partial class ModifyProducerModel2 : Migration
+    public partial class ModificandoValidacionEntidadesRelacionadas1 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

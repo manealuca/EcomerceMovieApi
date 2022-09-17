@@ -31,6 +31,7 @@ namespace MoviesEComerce.Data
             });
             modelBuilder.Entity<MovieActor>().HasOne(m => m.Movie).WithMany(am => am.MovieActors).HasForeignKey(m => m.MovieId);
             modelBuilder.Entity<MovieActor>().HasOne(a => a.Actor).WithMany(am => am.MovieActor).HasForeignKey(a => a.ActorId);
+            modelBuilder.Entity<Movie>().HasOne(c => c.cinema).WithMany(m => m.Movies).HasForeignKey(c => c.CinemaId);
             /*modelBuilder.Entity<Cinema>().HasData(
                         new Cinema()
                         {

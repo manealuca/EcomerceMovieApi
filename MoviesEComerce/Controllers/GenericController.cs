@@ -1,9 +1,12 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Azure.Management.ResourceManager.Models;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using MoviesEComerce.Data;
 using MoviesEComerce.Data.Services;
 using MoviesEComerce.Models;
+using Newtonsoft.Json;
 
 namespace MoviesEComerce.Controllers
 {
@@ -35,6 +38,7 @@ namespace MoviesEComerce.Controllers
             {
                 var errors = ModelState.Where(x => x.Value.Errors.Count > 0).Select(x => new { x.Key, x.Value.Errors }).ToArray();
 
+
                 return View(model);
             }
             Entity entity;
@@ -63,11 +67,40 @@ namespace MoviesEComerce.Controllers
             if (editActor is null) return View("NotFound");
             return View(editActor);
         }
+
         [HttpPost]
         public async Task<IActionResult> Edit(int id, Entity model)
         {
             if (!ModelState.IsValid) return View(model);
 
+            if(model is Movie)
+            {
+                Movie aux = JsonConvert.DeserializeObject<Movie>(JsonConvert.SerializeObject(model));
+            
+                
+                using (var db = new MovieComerceContext())
+            {
+               
+                var movieEdit = await db.Movie.Include(c => c.cinema).Include(p => p.MovieProducer).Include(am => am.MovieActors).ThenInclude(a => a.Actor).FirstOrDefaultAsync(n => n.Id == id);
+                    movieEdit.MovieImageUrl = aux.MovieImageUrl;
+                    movieEdit.MovieName = aux.MovieName;
+                    movieEdit.MovieCategory=aux.MovieCategory;
+                    movieEdit.cinema = aux.cinema;
+                    movieEdit.Price=aux.Price;
+                    movieEdit.ProducerId=aux.ProducerId;
+                    movieEdit.CinemaId = aux.CinemaId;
+                    movieEdit.EndDate=aux.EndDate;
+                    movieEdit.StartDate = aux.StartDate;
+                    movieEdit.MovieActors=aux.MovieActors;
+                    movieEdit.MovieDescription = aux.MovieDescription;
+                    movieEdit.MovieProducer = aux.MovieProducer;
+                    movieEdit.cinema = aux.cinema;
+
+                    model = _mapper.Map<Entity>(movieEdit);
+                    await _repository.UpdateAsync(id, model);
+                    return RedirectToAction(nameof(Index));
+            }   
+            }
             await _repository.UpdateAsync(id, model);
             return RedirectToAction(nameof(Index));
 
@@ -107,11 +140,23 @@ namespace MoviesEComerce.Controllers
             }
             return View(entity);
         }*/
+
         public async Task<IActionResult> Detail(int id)
         {
+            
             var actorDetail = await _repository.GetByIdAsync(id);
             if (actorDetail is null) return View("NotFound");
 
+            if(actorDetail is Movie)
+            {
+                using (var db = new MovieComerceContext())
+                {
+                    var movieDetail = await db.Movie.Include(c => c.cinema).Include(p => p.MovieProducer).Include(am => am.MovieActors).ThenInclude(a => a.Actor).FirstOrDefaultAsync(n => n.Id == id);
+                    if (movieDetail is null) return View("NotFound");
+
+                    return View(movieDetail);
+                }
+            }
             return View(actorDetail);
         }
         //Actor/Delete
@@ -119,6 +164,16 @@ namespace MoviesEComerce.Controllers
         {
             var deleteModel = await _repository.GetByIdAsync(id);
             if (deleteModel is null) return View("NotFound");
+            if (deleteModel is Movie)
+            {
+                using (var db = new MovieComerceContext())
+                {
+                    var movieDelete = await db.Movie.Include(c => c.cinema).Include(p => p.MovieProducer).Include(am => am.MovieActors).ThenInclude(a => a.Actor).FirstOrDefaultAsync(n => n.Id == id);
+                    if (movieDelete is null) return View("NotFound");
+
+                    return View(movieDelete);
+                }
+            }
             return View(deleteModel);
         }
         [HttpPost, ActionName("Delete")]

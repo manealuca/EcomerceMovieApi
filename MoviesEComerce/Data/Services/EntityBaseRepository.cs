@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using MoviesEComerce.Models;
+using Newtonsoft.Json;
 using System.Linq.Expressions;
 using System.Web.Mvc;
 
@@ -20,7 +21,7 @@ namespace MoviesEComerce.Data.Services
         }
         public Task AddAsync(T entity)
         {
-
+          
             EntitySet.Add(entity);
             _context.SaveChanges();
             return Task.CompletedTask;
@@ -41,8 +42,10 @@ namespace MoviesEComerce.Data.Services
 
         public Task UpdateAsync(int id, T entity)
         {
-            EntityEntry entityEntry = _context.Entry(entity);
+            /*EntityEntry entityEntry = _context.Entry(entity);
             entityEntry.State = EntityState.Modified;
+           */
+            EntitySet.Update(entity);
             _context.SaveChanges();
             return Task.CompletedTask;
 

@@ -12,8 +12,8 @@ using MoviesEComerce.Data;
 namespace MoviesEComerce.Migrations
 {
     [DbContext(typeof(MovieComerceContext))]
-    [Migration("20220915192246_ModifyProducerModel2")]
-    partial class ModifyProducerModel2
+    [Migration("20220917014545_ModificandoValidacionEntidadesRelacionadas1")]
+    partial class ModificandoValidacionEntidadesRelacionadas1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -53,48 +53,52 @@ namespace MoviesEComerce.Migrations
 
             modelBuilder.Entity("MoviesEComerce.Models.Cinema", b =>
                 {
-                    b.Property<int>("CinemaId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CinemaId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.Property<string>("FullName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Logo")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("CinemaId");
+                    b.HasKey("Id");
 
                     b.ToTable("Cinema");
                 });
 
             modelBuilder.Entity("MoviesEComerce.Models.Movie", b =>
                 {
-                    b.Property<int>("MovieId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MovieId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("CinemaId")
+                    b.Property<int?>("CinemaId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("MovieCategory")
+                    b.Property<int?>("MovieCategory")
                         .HasColumnType("int");
 
                     b.Property<string>("MovieDescription")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.Property<string>("MovieImageUrl")
                         .IsRequired()
@@ -102,18 +106,19 @@ namespace MoviesEComerce.Migrations
 
                     b.Property<string>("MovieName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<double>("Price")
                         .HasColumnType("float");
 
-                    b.Property<int>("ProducerId")
+                    b.Property<int?>("ProducerId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("MovieId");
+                    b.HasKey("Id");
 
                     b.HasIndex("CinemaId");
 
@@ -146,11 +151,14 @@ namespace MoviesEComerce.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Bio")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.Property<string>("FullName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("PictureURL")
                         .IsRequired()
@@ -164,16 +172,12 @@ namespace MoviesEComerce.Migrations
             modelBuilder.Entity("MoviesEComerce.Models.Movie", b =>
                 {
                     b.HasOne("MoviesEComerce.Models.Cinema", "cinema")
-                        .WithMany()
-                        .HasForeignKey("CinemaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany("Movies")
+                        .HasForeignKey("CinemaId");
 
                     b.HasOne("MoviesEComerce.Models.Producer", "MovieProducer")
                         .WithMany("Movies")
-                        .HasForeignKey("ProducerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ProducerId");
 
                     b.Navigation("MovieProducer");
 
@@ -202,6 +206,11 @@ namespace MoviesEComerce.Migrations
             modelBuilder.Entity("MoviesEComerce.Models.Actor", b =>
                 {
                     b.Navigation("MovieActor");
+                });
+
+            modelBuilder.Entity("MoviesEComerce.Models.Cinema", b =>
+                {
+                    b.Navigation("Movies");
                 });
 
             modelBuilder.Entity("MoviesEComerce.Models.Movie", b =>
