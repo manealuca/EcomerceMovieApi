@@ -76,8 +76,8 @@ namespace MoviesEComerce.Controllers
             if(model is Movie)
             {
                 Movie aux = JsonConvert.DeserializeObject<Movie>(JsonConvert.SerializeObject(model));
-            
-                
+
+
                 using (var db = new MovieComerceContext())
             {
                

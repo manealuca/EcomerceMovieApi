@@ -11,6 +11,7 @@ namespace MoviesEComerce.AutoMapper
             CreateMap<ProducerEntity, Producer>().ReverseMap();
             CreateMap<CinemaEntity, Cinema>().ReverseMap();
             CreateMap<MovieEntity,Movie>().ReverseMap();
+            CreateMap<OrderEntity, Order>().ReverseMap();
         }
     }
 }

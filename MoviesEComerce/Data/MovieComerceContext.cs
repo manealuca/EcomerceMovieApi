@@ -1,16 +1,22 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using MoviesEComerce.Data.Enums;
 using MoviesEComerce.Models;
 
 namespace MoviesEComerce.Data
 {
-    public class MovieComerceContext: DbContext
+    public class MovieComerceContext: IdentityDbContext<Applicationuser>
     {
-        public DbSet<Movie> Movie { get; set; }
-        public DbSet<Actor> Actor { get; set; }
-        public DbSet<Producer> Producer { get; set; }
-        public DbSet<Cinema> Cinema { get; set; }
-        public DbSet<MovieActor> MovieActor { get; set; }
+
+        public MovieComerceContext(DbContextOptions<MovieComerceContext> options) : base(options)
+        {
+        }
+
+        public MovieComerceContext()
+        {
+
+        }
+
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
@@ -31,7 +37,8 @@ namespace MoviesEComerce.Data
             });
             modelBuilder.Entity<MovieActor>().HasOne(m => m.Movie).WithMany(am => am.MovieActors).HasForeignKey(m => m.MovieId);
             modelBuilder.Entity<MovieActor>().HasOne(a => a.Actor).WithMany(am => am.MovieActor).HasForeignKey(a => a.ActorId);
-            modelBuilder.Entity<Movie>().HasOne(c => c.cinema).WithMany(m => m.Movies).HasForeignKey(c => c.CinemaId);
+            //modelBuilder.Entity<Movie>().HasOne(c => c.cinema).WithMany(m => m.Movies).HasForeignKey(c => c.CinemaId);
+            base.OnModelCreating(modelBuilder);
             /*modelBuilder.Entity<Cinema>().HasData(
                         new Cinema()
                         {
@@ -299,6 +306,21 @@ namespace MoviesEComerce.Data
 
                 */
         }
+
+        public DbSet<ShoppingCartItem> shoppingCartItems { get; set; }
+        
+        public DbSet<Movie> Movie { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderItem> OrderItems { get; set; }
+        public DbSet<Applicationuser> User { get; set; }
+
+
+        public DbSet<Actor> Actor { get; set; }
+        public DbSet<Producer> Producer { get; set; }
+        public DbSet<Cinema> Cinema { get; set; }
+        public DbSet<MovieActor> MovieActor { get; set; }
+
+
 
 
     }
