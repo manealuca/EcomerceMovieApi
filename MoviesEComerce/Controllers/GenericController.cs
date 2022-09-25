@@ -37,8 +37,6 @@ namespace MoviesEComerce.Controllers
             if (!ModelState.IsValid)
             {
                 var errors = ModelState.Where(x => x.Value.Errors.Count > 0).Select(x => new { x.Key, x.Value.Errors }).ToArray();
-
-
                 return View(model);
             }
             Entity entity;
@@ -46,7 +44,34 @@ namespace MoviesEComerce.Controllers
             {
                 //entity = _mapper.Map<Entity>(model);
                 var errors = ModelState.Where(x => x.Value.Errors.Count > 0).Select(x => new { x.Key, x.Value.Errors }).ToArray();
-                await _repository.AddAsync(_mapper.Map<Entity>(model));
+                 _repository.AddAsync(_mapper.Map<Entity>(model));
+                
+                if (model is MovieEntity)
+                {
+                    
+                    await using (var db = new MovieComerceContext())
+                    {
+                        var movie = _mapper.Map<MovieEntity>(model);
+                        var movies = db.Movie.Where(m => m.MovieName == movie.MovieName && m.MovieCategory == movie.MovieCategory && m.ProducerId == movie.ProducerId && m.MovieImageUrl == movie.MovieImageUrl).FirstOrDefault();
+                        List<MovieActor> ActorList = new List<MovieActor>();
+                        foreach (var id in movie.ActorIds)
+                        {
+                            var newActorMovie = new MovieActor()
+                            {
+                                MovieId = movies.Id,
+                                ActorId = id
+                            };
+                            ActorList.Add(newActorMovie);
+
+                        }
+                        db.MovieActor.AddRange(ActorList);
+                        db.SaveChanges();
+                    }
+
+
+                }
+
+
                 return RedirectToAction(nameof(Index));
             }
             catch (DbUpdateException ex)
@@ -65,7 +90,9 @@ namespace MoviesEComerce.Controllers
         {
             var editActor = await _repository.GetByIdAsync(id);
             if (editActor is null) return View("NotFound");
+            
             return View(editActor);
+
         }
 
         [HttpPost]

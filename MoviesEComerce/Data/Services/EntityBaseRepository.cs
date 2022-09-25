@@ -21,9 +21,10 @@ namespace MoviesEComerce.Data.Services
         }
         public Task AddAsync(T entity)
         {
-          
-            EntitySet.Add(entity);
+                
+             EntitySet.Add(entity);
             _context.SaveChanges();
+            
             return Task.CompletedTask;
         }
 

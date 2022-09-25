@@ -44,7 +44,9 @@ namespace MoviesEComerce.Models
         public Cinema? cinema { get; set; }
 
 
-        public List<MovieActor>? MovieActors { get; set; }
+        [Display(Name = "Select actor(s)")]
+        [Required(ErrorMessage = "Movie actor(s) is required")]
+        public List<int> ActorIds { get; set; }
         public MovieCategory? MovieCategory { get; set; }
 
         [Display(Name = "Producer")]
